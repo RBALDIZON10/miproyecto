@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Proyecto integrador de Virtualización y Computación en la Nube: VMware, Docker, Azure, redes, seguridad y laboratorios.">
+<title>Virtualización y Computación en la Nube | Proyecto Integrador</title>
+<style>
+:root{
+ --bg:#f4f7fb;--surface:#fff;--surface2:#eaf1f8;--ink:#203047;--muted:#64758b;
+ --navy:#10243d;--blue:#1769aa;--cyan:#11a6b8;--line:#dbe5ef;--shadow:0 12px 32px rgba(17,43,72,.08);
+ --good:#18835d;--warn:#b76b12;
+}
+body.dark{--bg:#0c1522;--surface:#142236;--surface2:#1b3049;--ink:#e6eef8;--muted:#a8b8ca;--navy:#dcecff;--blue:#65b7f2;--cyan:#52d0d8;--line:#2b4059;--shadow:0 12px 32px rgba(0,0,0,.2)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 Inter,Segoe UI,Arial,sans-serif;transition:background .2s,color .2s}
+button,a{font:inherit}a{color:var(--blue)}button{cursor:pointer}
+.topbar{height:66px;position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 25px;gap:18px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;color:var(--navy);letter-spacing:.02em}.brandmark{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:grid;place-items:center;color:white;font-weight:900}
+.top-actions{display:flex;align-items:center;gap:9px}.iconbtn,.mobilebtn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 11px}.mobilebtn{display:none}
+.shell{display:grid;grid-template-columns:255px minmax(0,1fr);max-width:1500px;margin:auto;min-height:calc(100vh - 66px)}
+.sidebar{border-right:1px solid var(--line);padding:25px 15px;background:var(--surface);position:sticky;top:66px;height:calc(100vh - 66px);overflow:auto}
+.side-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:800;padding:12px 12px 8px}
+.navlink{width:100%;border:0;background:transparent;color:var(--muted);text-align:left;padding:10px 12px;border-radius:9px;display:flex;gap:11px;align-items:center;margin:2px 0;font-size:13px}
+.navlink:hover,.navlink.active{background:var(--surface2);color:var(--blue);font-weight:700}.navlink .ico{width:19px;text-align:center;font-size:16px}
+.side-note{margin:25px 7px 5px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);font-size:12px;color:var(--muted)}
+main{min-width:0;padding:30px clamp(18px,4vw,56px) 70px}
+.page{display:none;animation:fade .25s ease}.page.active{display:block}@keyframes fade{from{opacity:.3;transform:translateY(5px)}to{opacity:1;transform:none}}
+.hero{border-radius:22px;padding:clamp(26px,5vw,58px);color:#fff;background:radial-gradient(circle at 86% 15%,rgba(42,197,205,.38),transparent 25%),linear-gradient(120deg,#10243d,#174d78 68%,#117d8b);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:290px;height:290px;border:1px solid rgba(255,255,255,.13);border-radius:50%;right:-85px;bottom:-155px;box-shadow:0 0 0 35px rgba(255,255,255,.035),0 0 0 75px rgba(255,255,255,.025)}
+.eyebrow{color:#91e6eb;text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:800}.hero h1{font-size:clamp(31px,5vw,53px);line-height:1.08;max-width:780px;margin:14px 0}.hero p{color:#dfedf7;max-width:760px;font-size:16px}
+.btn{border:0;border-radius:10px;padding:11px 16px;font-weight:750;display:inline-flex;align-items:center;gap:8px;text-decoration:none}.btn-light{background:#fff;color:#10243d}.btn-outline{border:1px solid rgba(255,255,255,.45);color:#fff;background:transparent}.btn-blue{background:var(--blue);color:white}.btn-soft{background:var(--surface2);color:var(--blue)}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px;position:relative;z-index:1}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:18px 0 30px}.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:17px;box-shadow:var(--shadow)}.stat strong{display:block;color:var(--blue);font-size:24px}.stat span{color:var(--muted);font-size:12px}
+.section-head{margin:35px 0 17px}.section-head h2{margin:0;color:var(--navy);font-size:26px}.section-head p{margin:5px 0 0;color:var(--muted);max-width:850px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:20px;box-shadow:var(--shadow)}.card h3{color:var(--navy);font-size:17px;margin:5px 0 8px}.card p{margin:0;color:var(--muted);font-size:13px}.card-icon{width:42px;height:42px;border-radius:12px;background:var(--surface2);display:grid;place-items:center;font-size:21px;margin-bottom:12px}.pill{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 8px;border-radius:20px;background:var(--surface2);color:var(--blue)}
+.callout{padding:17px 19px;background:var(--surface2);border-left:4px solid var(--cyan);border-radius:0 12px 12px 0;margin:18px 0;color:var(--ink)}
+.flow{display:flex;align-items:stretch;gap:9px;flex-wrap:wrap;margin:20px 0}.flowbox{flex:1 1 145px;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:17px}.flowbox b{display:block;color:var(--blue);margin-bottom:4px}.flowarrow{align-self:center;color:var(--cyan);font-size:22px;font-weight:900}
+.bullets{padding-left:20px;color:var(--muted);font-size:13px}.bullets li{margin:7px 0}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.search{flex:1;min-width:220px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:11px 13px}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}.tab{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:9px;padding:9px 13px}.tab.active{background:var(--blue);border-color:var(--blue);color:white}
+.tabpanel{display:none}.tabpanel.active{display:block}
+.accordion{border:1px solid var(--line);border-radius:12px;background:var(--surface);margin:10px 0;overflow:hidden}.acc-btn{width:100%;border:0;background:transparent;color:var(--ink);padding:15px 17px;text-align:left;font-weight:750;display:flex;justify-content:space-between}.acc-content{display:none;padding:0 17px 16px;color:var(--muted);font-size:13px}.accordion.open .acc-content{display:block}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}table{width:100%;border-collapse:collapse;min-width:550px}th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px}th{background:var(--surface2);color:var(--navy)}td{color:var(--muted)}
+.code{background:#0d1b2b;color:#d6e8f8;padding:16px;border-radius:12px;overflow:auto;font:12px/1.7 Consolas,monospace;position:relative}.copy{float:right;background:#24415e;color:#fff;border:0;border-radius:7px;padding:5px 9px;font-size:11px}
+.quiz-q{font-weight:750;color:var(--navy);margin-bottom:10px}.option{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);color:var(--ink);padding:11px 13px;border-radius:9px;margin:7px 0}.option:hover{border-color:var(--blue)}.option.correct{border-color:var(--good);background:rgba(24,131,93,.1)}.option.wrong{border-color:#c65353;background:rgba(198,83,83,.08)}.feedback{font-size:13px;color:var(--muted);min-height:25px;margin-top:8px}
+.progress{height:8px;background:var(--surface2);border-radius:10px;overflow:hidden;margin:12px 0}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .25s}
+.footer{border-top:1px solid var(--line);margin-top:45px;padding-top:20px;color:var(--muted);font-size:12px}
+.toast{position:fixed;bottom:20px;right:20px;background:#142b49;color:white;padding:10px 15px;border-radius:10px;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none;z-index:50}.toast.show{opacity:1;transform:none}
+@media(max-width:950px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){.topbar{padding:0 14px}.mobilebtn{display:block}.shell{display:block}.sidebar{position:fixed;z-index:30;left:0;top:66px;bottom:0;width:270px;height:auto;transform:translateX(-105%);transition:transform .22s;box-shadow:var(--shadow)}.sidebar.show{transform:translateX(0)}main{padding:17px 14px 50px}.grid,.grid.two{grid-template-columns:1fr}.hero{border-radius:16px}.flowarrow{display:none}.brand{font-size:12px}}
+</style>
+</head>
+<body>
+<div class="topbar">
+ <button class="mobilebtn" id="menuBtn" aria-label="Abrir menú">☰</button>
+ <div class="brand"><div class="brandmark">VC</div><span>VIRTUALIZACIÓN & CLOUD</span></div>
+ <div class="top-actions"><button class="iconbtn" id="themeBtn" title="Cambiar tema">☾ <span class="theme-label">Modo oscuro</span></button></div>
+</div>
+<div class="shell">
+<aside class="sidebar" id="sidebar">
+ <div class="side-label">Contenido del sitio</div>
+ <button class="navlink active" data-page="inicio"><span class="ico">⌂</span> Inicio</button>
+ <button class="navlink" data-page="fundamentos"><span class="ico">▦</span> Fundamentos</button>
+ <button class="navlink" data-page="vmware"><span class="ico">▣</span> VMware y virtualización</button>
+ <button class="navlink" data-page="docker"><span class="ico">◈</span> Docker y contenedores</button>
+ <button class="navlink" data-page="azure"><span class="ico">☁</span> Microsoft Azure</button>
+ <button class="navlink" data-page="redes"><span class="ico">⌘</span> Redes y conectividad</button>
+ <button class="navlink" data-page="seguridad"><span class="ico">⬡</span> Seguridad y administración</button>
+ <button class="navlink" data-page="laboratorios"><span class="ico">⚙</span> Laboratorios y comandos</button>
+ <button class="navlink" data-page="evaluacion"><span class="ico">✓</span> Autoevaluación</button>
+ <div class="side-note"><b>Proyecto integrador</b><br>Electiva: Virtualización y Computación en la Nube.<br><br>Material académico de consulta y repaso.</div>
+</aside>
+<main>
+<!-- INICIO -->
+<section class="page active" id="page-inicio">
+ <div class="hero"><div class="eyebrow">Proyecto integrador · Electiva</div><h1>Virtualización y Computación en la Nube</h1><p>Explora las tecnologías que permiten construir, desplegar y administrar infraestructuras modernas. Este espacio reúne conceptos, plataformas, prácticas de laboratorio y recomendaciones de seguridad.</p><div class="hero-actions"><button class="btn btn-light" data-go="fundamentos">Comenzar recorrido →</button><button class="btn btn-outline" data-go="evaluacion">Probar conocimientos</button></div></div>
+ <div class="stats"><div class="stat"><strong>4</strong><span>Áreas tecnológicas principales</span></div><div class="stat"><strong>8</strong><span>Secciones de aprendizaje</span></div><div class="stat"><strong>1</strong><span>Entorno de aprendizaje integrado</span></div><div class="stat"><strong>100%</strong><span>Contenido navegable e interactivo</span></div></div>
+ <div class="section-head"><h2>¿Qué aprenderás?</h2><p>Una visión general de los componentes que forman parte de una infraestructura virtualizada y basada en la nube.</p></div>
+ <div class="grid">
+  <article class="card"><div class="card-icon">🖥️</div><span class="pill">Infraestructura</span><h3>Virtualización</h3><p>Comprende hipervisores, máquinas virtuales, recursos de hardware y administración centralizada con VMware.</p></article>
+  <article class="card"><div class="card-icon">📦</div><span class="pill">Aplicaciones</span><h3>Contenedores</h3><p>Conoce imágenes, contenedores, volúmenes, redes y despliegue de aplicaciones con Docker.</p></article>
+  <article class="card"><div class="card-icon">☁️</div><span class="pill">Servicios cloud</span><h3>Computación en la nube</h3><p>Explora máquinas virtuales, redes virtuales, almacenamiento y recursos de Microsoft Azure.</p></article>
+ </div>
+ <div class="section-head"><h2>Ruta de aprendizaje</h2><p>Selecciona una etapa para avanzar por los temas del proyecto.</p></div>
+ <div class="flow"><div class="flowbox"><b>01 · Comprender</b>Fundamentos y modelos</div><div class="flowarrow">→</div><div class="flowbox"><b>02 · Virtualizar</b>ESXi y vCenter</div><div class="flowarrow">→</div><div class="flowbox"><b>03 · Desplegar</b>Docker y servicios</div><div class="flowarrow">→</div><div class="flowbox"><b>04 · Administrar</b>Azure, redes y seguridad</div></div>
+ <div class="callout"><b>Nota para la entrega:</b> personaliza este sitio con tu nombre, grupo, docente y capturas reales de tus laboratorios. Los apartados describen conceptos generales; añade evidencia de las configuraciones que efectivamente realizaste.</div>
+</section>
+<!-- FUNDAMENTOS -->
+<section class="page" id="page-fundamentos">
+ <div class="section-head"><span class="pill">Módulo 01</span><h2>Fundamentos de virtualización y nube</h2><p>Conceptos esenciales para entender cómo se organizan los recursos informáticos actuales.</p></div>
+ <div class="grid two">
+  <article class="card"><h3>¿Qué es la virtualización?</h3><p>Es una tecnología que permite crear representaciones virtuales de recursos físicos, como servidores, sistemas operativos, almacenamiento y redes. Un servidor físico puede alojar varias máquinas virtuales aisladas entre sí.</p></article>
+  <article class="card"><h3>¿Qué es la computación en la nube?</h3><p>Es un modelo que permite acceder por red a recursos informáticos configurables, como procesamiento, almacenamiento y servicios, que pueden aprovisionarse según la demanda.</p></article>
+  <article class="card"><h3>Máquina virtual (VM)</h3><p>Entorno de software que emula un equipo físico. Tiene recursos asignados, sistema operativo y aplicaciones, y funciona sobre un hipervisor.</p></article>
+  <article class="card"><h3>Hipervisor</h3><p>Capa de software que crea y administra máquinas virtuales, distribuyendo recursos físicos como CPU, memoria, almacenamiento y red.</p></article>
+ </div>
+ <div class="section-head"><h2>Modelos de servicio en la nube</h2><p>Los modelos describen qué parte de la infraestructura administra el proveedor y qué parte administra el cliente.</p></div>
+ <div class="tablewrap"><table><thead><tr><th>Modelo</th><th>Descripción</th><th>Responsabilidad del usuario</th></tr></thead><tbody>
+ <tr><td><b>IaaS</b></td><td>Infraestructura como servicio: cómputo, redes y almacenamiento virtual.</td><td>Sistema operativo, aplicaciones, datos y configuraciones.</td></tr>
+ <tr><td><b>PaaS</b></td><td>Plataforma como servicio para desarrollar y ejecutar aplicaciones.</td><td>Código, datos y configuración de la aplicación.</td></tr>
+ <tr><td><b>SaaS</b></td><td>Software listo para utilizarse a través de Internet.</td><td>Uso, usuarios, datos y opciones disponibles del servicio.</td></tr>
+ </tbody></table></div>
+ <div class="section-head"><h2>Tipos de nube</h2></div>
+ <div class="grid">
+  <article class="card"><h3>Nube pública</h3><p>Los recursos son ofrecidos por un proveedor a través de su plataforma, como Microsoft Azure.</p></article>
+  <article class="card"><h3>Nube privada</h3><p>Infraestructura dedicada a una organización, con mayor control sobre su entorno y administración.</p></article>
+  <article class="card"><h3>Nube híbrida</h3><p>Integra infraestructura privada o local con servicios de nube pública, permitiendo distribuir cargas de trabajo.</p></article>
+ </div>
+ <div class="callout"><b>Ejemplo:</b> una organización puede mantener algunos sistemas en servidores propios y utilizar Azure para alojar recursos adicionales o respaldar servicios.</div>
+</section>
+<!-- VMWARE -->
+<section class="page" id="page-vmware">
+ <div class="section-head"><span class="pill">Módulo 02</span><h2>Virtualización con VMware</h2><p>VMware permite consolidar servidores y administrar máquinas virtuales sobre infraestructura física.</p></div>
+ <div class="grid two">
+  <article class="card"><div class="card-icon">▣</div><h3>VMware ESXi</h3><p>Hipervisor de tipo 1 que se instala directamente en el servidor físico. Administra la ejecución de máquinas virtuales y el acceso a recursos de hardware.</p><ul class="bullets"><li>Asignación de CPU y memoria.</li><li>Almacenamiento de discos virtuales.</li><li>Adaptadores y redes virtuales.</li><li>Consola de administración del host.</li></ul></article>
+  <article class="card"><div class="card-icon">🗂️</div><h3>vCenter Server</h3><p>Plataforma de administración centralizada para entornos VMware vSphere. Facilita gestionar hosts ESXi, inventario, redes, almacenamiento y máquinas virtuales.</p><ul class="bullets"><li>Administración central de hosts.</li><li>Gestión de inventario y permisos.</li><li>Supervisión de recursos.</li><li>Operaciones coordinadas del entorno.</li></ul></article>
+ </div>
+ <div class="section-head"><h2>Componentes de una máquina virtual</h2></div>
+ <div class="grid">
+  <article class="card"><h3>CPU virtual</h3><p>Procesamiento asignado a la máquina virtual mediante uno o más vCPU.</p></article>
+  <article class="card"><h3>Memoria RAM</h3><p>Memoria que utiliza el sistema operativo invitado y sus aplicaciones.</p></article>
+  <article class="card"><h3>Disco virtual</h3><p>Almacenamiento virtual donde se guardan sistema operativo, archivos y aplicaciones.</p></article>
+  <article class="card"><h3>Adaptador de red</h3><p>Conecta la VM a redes virtuales y permite su comunicación con otros equipos.</p></article>
+  <article class="card"><h3>Sistema operativo</h3><p>Software invitado instalado dentro de la máquina virtual.</p></article>
+  <article class="card"><h3>Snapshot</h3><p>Captura del estado de una VM en un momento determinado; no sustituye una copia de seguridad.</p></article>
+ </div>
+ <div class="section-head"><h2>Flujo conceptual</h2></div>
+ <div class="flow"><div class="flowbox"><b>Servidor físico</b>CPU · RAM · discos · NIC</div><div class="flowarrow">→</div><div class="flowbox"><b>ESXi</b>Hipervisor</div><div class="flowarrow">→</div><div class="flowbox"><b>Máquinas virtuales</b>Windows · Linux · servicios</div><div class="flowarrow">→</div><div class="flowbox"><b>vCenter</b>Administración central</div></div>
+ <div class="callout"><b>Buenas prácticas:</b> dimensionar recursos según la carga real, documentar redes y almacenamiento, controlar permisos y mantener respaldos probados.</div>
+</section>
+<!-- DOCKER -->
+<section class="page" id="page-docker">
+ <div class="section-head"><span class="pill">Módulo 03</span><h2>Contenedores y Docker</h2><p>Los contenedores facilitan empaquetar y ejecutar aplicaciones de forma consistente en distintos entornos compatibles.</p></div>
+ <div class="grid two">
+  <article class="card"><h3>¿Qué es Docker?</h3><p>Plataforma para construir, distribuir y ejecutar aplicaciones en contenedores. Utiliza imágenes como plantillas de solo lectura y crea contenedores a partir de ellas.</p></article>
+  <article class="card"><h3>Contenedor vs. máquina virtual</h3><p>Una VM incluye un sistema operativo invitado sobre un hipervisor. Un contenedor aísla procesos y comparte el kernel del sistema anfitrión, por lo que suele ser más ligero.</p></article>
+ </div>
+ <div class="section-head"><h2>Conceptos principales</h2></div>
+ <div class="grid">
+  <article class="card"><h3>Imagen</h3><p>Plantilla que contiene la aplicación y sus dependencias para crear contenedores.</p></article>
+  <article class="card"><h3>Contenedor</h3><p>Instancia en ejecución de una imagen, con procesos y configuración propios.</p></article>
+  <article class="card"><h3>Volumen</h3><p>Mecanismo para conservar datos fuera del ciclo de vida del contenedor.</p></article>
+  <article class="card"><h3>Red Docker</h3><p>Permite la comunicación entre contenedores y con otros destinos de red.</p></article>
+  <article class="card"><h3>Dockerfile</h3><p>Archivo de instrucciones utilizado para construir una imagen personalizada.</p></article>
+  <article class="card"><h3>Docker Compose</h3><p>Herramienta para definir y administrar aplicaciones compuestas por varios servicios.</p></article>
+ </div>
+ <div class="section-head"><h2>Comandos básicos de referencia</h2><p>Ejemplos generales para consultar Docker. Ejecútalos en un equipo donde Docker esté instalado.</p></div>
+ <div class="code"><button class="copy" data-copy="docker --version&#10;docker ps -a&#10;docker images&#10;docker run -d -p 8080:80 --name web nginx&#10;docker logs web&#10;docker stop web&#10;docker start web">Copiar comandos</button><pre>docker --version
+docker ps -a
+docker images
+docker run -d -p 8080:80 --name web nginx
+docker logs web
+docker stop web
+docker start web</pre></div>
+ <div class="callout"><b>Ejemplo:</b> al ejecutar un contenedor Nginx con el puerto 8080 del host enlazado al puerto 80 del contenedor, se puede probar el servicio desde el navegador mediante la dirección IP del host y el puerto 8080.</div>
+</section>
+<!-- AZURE -->
+<section class="page" id="page-azure">
+ <div class="section-head"><span class="pill">Módulo 04</span><h2>Microsoft Azure</h2><p>Azure es la plataforma de nube de Microsoft. Permite crear y administrar recursos desde el portal web, CLI y otras herramientas.</p></div>
+ <div class="grid">
+  <article class="card"><div class="card-icon">☁️</div><h3>Máquinas virtuales</h3><p>Servidores virtuales configurables con sistema operativo, tamaño, discos y redes.</p></article>
+  <article class="card"><div class="card-icon">🌐</div><h3>Virtual Network</h3><p>Red privada lógica que permite conectar recursos de Azure y controlar su direccionamiento.</p></article>
+  <article class="card"><div class="card-icon">⚖️</div><h3>Load Balancer</h3><p>Distribuye conexiones entrantes entre instancias saludables, según reglas y sondas configuradas.</p></article>
+  <article class="card"><div class="card-icon">🔐</div><h3>Key Vault</h3><p>Servicio para almacenar y controlar el acceso a secretos, claves y certificados.</p></article>
+  <article class="card"><div class="card-icon">🔗</div><h3>VNet Peering</h3><p>Conecta redes virtuales de Azure para permitir comunicación privada entre ellas.</p></article>
+  <article class="card"><div class="card-icon">📊</div><h3>Supervisión</h3><p>Permite observar métricas, diagnósticos y registros para evaluar el estado de los recursos.</p></article>
+ </div>
+ <div class="section-head"><h2>Elementos habituales al desplegar una VM</h2></div>
+ <div class="flow"><div class="flowbox"><b>Grupo de recursos</b>Contenedor lógico</div><div class="flowarrow">→</div><div class="flowbox"><b>Red virtual</b>Subnet y reglas</div><div class="flowarrow">→</div><div class="flowbox"><b>Máquina virtual</b>Imagen y tamaño</div><div class="flowarrow">→</div><div class="flowbox"><b>Acceso</b>IP y autenticación</div></div>
+ <div class="callout"><b>Importante:</b> revisa las cuotas, regiones disponibles, límites de la suscripción y costos antes de crear recursos. Detener una VM puede no eliminar todos los cargos asociados a discos, direcciones IP u otros recursos.</div>
+</section>
+<!-- REDES -->
+<section class="page" id="page-redes">
+ <div class="section-head"><span class="pill">Módulo 05</span><h2>Redes y conectividad</h2><p>Las redes virtuales conectan máquinas, contenedores y servicios locales o en la nube.</p></div>
+ <div class="grid two">
+  <article class="card"><h3>Direccionamiento IP</h3><p>Las direcciones IPv4 e IPv6 identifican interfaces y permiten enrutar tráfico entre redes. La planificación debe evitar solapamientos de subredes.</p></article>
+  <article class="card"><h3>Segmentación</h3><p>Las VLAN separan dominios de broadcast y ayudan a organizar usuarios, servidores, administración y otros servicios.</p></article>
+  <article class="card"><h3>Firewall y reglas</h3><p>Controlan qué conexiones pueden entrar o salir, aplicando el principio de permitir solo el tráfico necesario.</p></article>
+  <article class="card"><h3>VPN y túneles</h3><p>WireGuard, por ejemplo, permite establecer túneles VPN para conectar redes o equipos mediante comunicación cifrada.</p></article>
+ </div>
+ <div class="section-head"><h2>Servicios de red que conviene conocer</h2></div>
+ <div class="tablewrap"><table><thead><tr><th>Servicio</th><th>Función</th><th>Ejemplo de uso</th></tr></thead><tbody>
+ <tr><td>DHCP</td><td>Asignación automática de parámetros IP.</td><td>Entregar IP, gateway y DNS a clientes.</td></tr>
+ <tr><td>DNS</td><td>Resolución de nombres a direcciones IP.</td><td>Acceder a servicios mediante nombres.</td></tr>
+ <tr><td>NAT</td><td>Traducción de direcciones de red.</td><td>Permitir salida a Internet desde una red privada.</td></tr>
+ <tr><td>Balanceador</td><td>Distribución de tráfico entre servidores.</td><td>HAProxy o Azure Load Balancer.</td></tr>
+ <tr><td>VPN</td><td>Conectividad cifrada a través de redes no confiables.</td><td>Conectar una instancia remota a una red privada.</td></tr>
+ </tbody></table></div>
+ <div class="callout"><b>Diseño recomendado:</b> documenta subredes, gateways, DNS, puertos, reglas de firewall y rutas. Antes de habilitar un servicio, verifica desde qué redes debe ser accesible.</div>
+</section>
+<!-- SEGURIDAD -->
+<section class="page" id="page-seguridad">
+ <div class="section-head"><span class="pill">Módulo 06</span><h2>Seguridad y administración</h2><p>La seguridad debe incorporarse desde el diseño y mantenerse durante toda la operación de la infraestructura.</p></div>
+ <div class="grid">
+  <article class="card"><h3>Identidad y acceso</h3><p>Utilizar cuentas individuales, autenticación robusta, permisos mínimos y revisión periódica de privilegios.</p></article>
+  <article class="card"><h3>Actualizaciones</h3><p>Aplicar parches de seguridad a hipervisores, sistemas operativos, contenedores y aplicaciones.</p></article>
+  <article class="card"><h3>Protección de red</h3><p>Segmentar redes, restringir puertos, filtrar tráfico y evitar exponer servicios de administración a Internet.</p></article>
+  <article class="card"><h3>Copias de seguridad</h3><p>Definir frecuencia, retención y ubicación de respaldos. Probar restauraciones periódicamente.</p></article>
+  <article class="card"><h3>Monitoreo</h3><p>Observar uso de CPU, RAM, almacenamiento, disponibilidad, eventos y registros de seguridad.</p></article>
+  <article class="card"><h3>Continuidad</h3><p>Documentar dependencias, procedimientos de recuperación y responsables de operación.</p></article>
+ </div>
+ <div class="section-head"><h2>Lista de verificación</h2><p>Marca las prácticas que ya revisaste. La selección se mantiene mientras la página esté abierta.</p></div>
+ <div class="card" id="checklist">
+  <label><input type="checkbox"> Las cuentas administrativas están protegidas.</label><br><br>
+  <label><input type="checkbox"> Los servicios exponen únicamente los puertos necesarios.</label><br><br>
+  <label><input type="checkbox"> Las máquinas virtuales y contenedores se actualizan.</label><br><br>
+  <label><input type="checkbox"> Existen copias de seguridad y pruebas de restauración.</label><br><br>
+  <label><input type="checkbox"> Se monitorean recursos y eventos importantes.</label>
+  <div class="progress"><span id="checkProgress"></span></div><small id="checkCount" style="color:var(--muted)">0 de 5 completadas</small>
+ </div>
+</section>
+<!-- LABS -->
+<section class="page" id="page-laboratorios">
+ <div class="section-head"><span class="pill">Módulo 07</span><h2>Laboratorios y recursos prácticos</h2><p>Espacio para documentar ejercicios, procedimientos y evidencias desarrolladas durante la electiva.</p></div>
+ <div class="callout"><b>Personaliza esta sección:</b> agrega capturas de pantalla de tus prácticas, las direcciones IP utilizadas en tu laboratorio y los resultados de las verificaciones. No publiques contraseñas, tokens ni claves privadas.</div>
+ <div class="tabs">
+  <button class="tab active" data-tab="lab-vm">VMware</button><button class="tab" data-tab="lab-docker">Docker</button><button class="tab" data-tab="lab-azure">Azure</button><button class="tab" data-tab="lab-red">Redes</button>
+ </div>
+ <div class="tabpanel active" id="lab-vm"><div class="card"><h3>Práctica: administración de máquinas virtuales</h3><ol class="bullets"><li>Identificar el host ESXi y sus recursos físicos.</li><li>Crear o revisar una máquina virtual.</li><li>Asignar CPU, memoria, disco y adaptador de red.</li><li>Instalar o iniciar el sistema operativo invitado.</li><li>Verificar conectividad y consumo de recursos.</li></ol><p><b>Evidencia sugerida:</b> captura del inventario de vCenter, configuración de hardware de la VM y prueba de conectividad.</p></div></div>
+ <div class="tabpanel" id="lab-docker"><div class="card"><h3>Práctica: despliegue de un sitio web con Docker</h3><ol class="bullets"><li>Comprobar que Docker esté instalado.</li><li>Descargar una imagen, por ejemplo Nginx.</li><li>Crear y ejecutar el contenedor.</li><li>Publicar un puerto del contenedor en el host.</li><li>Comprobar el sitio desde el navegador y revisar los registros.</li></ol><p><b>Evidencia sugerida:</b> salida de <code>docker ps</code> y captura del sitio web cargado.</p></div></div>
+ <div class="tabpanel" id="lab-azure"><div class="card"><h3>Práctica: recursos básicos en Azure</h3><ol class="bullets"><li>Seleccionar la suscripción y región permitida.</li><li>Crear un grupo de recursos.</li><li>Configurar una red virtual y subred.</li><li>Desplegar una máquina virtual con acceso controlado.</li><li>Verificar conectividad y revisar costos y recursos asociados.</li></ol><p><b>Evidencia sugerida:</b> capturas de la VM, red virtual y estado de los recursos.</p></div></div>
+ <div class="tabpanel" id="lab-red"><div class="card"><h3>Práctica: conectividad y servicios de red</h3><ol class="bullets"><li>Documentar el direccionamiento IP y las subredes.</li><li>Verificar gateway y resolución DNS.</li><li>Comprobar reglas de firewall y puertos necesarios.</li><li>Probar conectividad entre redes o mediante VPN cuando corresponda.</li><li>Registrar resultados y corregir fallos.</li></ol><p><b>Evidencia sugerida:</b> diagrama de red, resultados de ping, traceroute y pruebas de servicio.</p></div></div>
+ <div class="section-head"><h2>Comandos útiles de consulta</h2></div>
+ <div class="accordion"><button class="acc-btn">Linux: red y conectividad <span>＋</span></button><div class="acc-content"><div class="code"><button class="copy" data-copy="ip addr&#10;ip route&#10;resolvectl status&#10;ping -c 4 8.8.8.8&#10;ss -tulpn">Copiar</button><pre>ip addr
+ip route
+resolvectl status
+ping -c 4 8.8.8.8
+ss -tulpn</pre></div></div></div>
+ <div class="accordion"><button class="acc-btn">Docker: estado y registros <span>＋</span></button><div class="acc-content"><div class="code"><button class="copy" data-copy="docker ps -a&#10;docker images&#10;docker logs NOMBRE_CONTENEDOR&#10;docker inspect NOMBRE_CONTENEDOR">Copiar</button><pre>docker ps -a
+docker images
+docker logs NOMBRE_CONTENEDOR
+docker inspect NOMBRE_CONTENEDOR</pre></div></div></div>
+ <div class="accordion"><button class="acc-btn">Windows: configuración de red <span>＋</span></button><div class="acc-content"><div class="code"><button class="copy" data-copy="ipconfig /all&#10;ping DIRECCION_IP&#10;tracert DIRECCION_IP&#10;nslookup DOMINIO">Copiar</button><pre>ipconfig /all
+ping DIRECCION_IP
+tracert DIRECCION_IP
+nslookup DOMINIO</pre></div></div></div>
+</section>
+<!-- QUIZ -->
+<section class="page" id="page-evaluacion">
+ <div class="section-head"><span class="pill">Actividad interactiva</span><h2>Autoevaluación</h2><p>Responde estas preguntas para repasar los conceptos principales del sitio.</p></div>
+ <div class="card">
+  <div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><b id="quizCounter">Pregunta 1 de 6</b><span class="pill" id="quizScore">Puntaje: 0</span></div>
+  <div class="progress"><span id="quizProgress" style="width:16.6%"></span></div>
+  <div class="quiz-q" id="quizQuestion"></div><div id="quizOptions"></div><div class="feedback" id="quizFeedback" aria-live="polite"></div>
+  <div style="display:flex;justify-content:space-between;margin-top:12px"><button class="btn btn-soft" id="quizReset">Reiniciar</button><button class="btn btn-blue" id="quizNext" disabled>Siguiente →</button></div>
+ </div>
+ <div class="section-head"><h2>Reflexión final</h2><p>¿Qué ventajas ofrece combinar virtualización, contenedores y servicios en la nube? Piensa en flexibilidad, administración, escalabilidad, seguridad y costos.</p></div>
+ <div class="card"><textarea id="reflection" rows="4" placeholder="Escribe aquí tu reflexión..." style="width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit"></textarea><button class="btn btn-blue" id="saveReflection" style="margin-top:10px">Guardar reflexión en esta sesión</button><p id="reflectionMsg" style="color:var(--muted);font-size:12px"></p></div>
+</section>
+<div class="footer">Proyecto integrador de la electiva · Virtualización y Computación en la Nube<br>Contenido educativo. Completa los datos académicos y añade tus evidencias antes de publicar.</div>
+</main>
+</div>
+<div class="toast" id="toast">Copiado al portapapeles</div>
+<script>
+const navButtons=[...document.querySelectorAll('.navlink')],pages=[...document.querySelectorAll('.page')],sidebar=document.getElementById('sidebar');
+function showPage(name){pages.forEach(p=>p.classList.toggle('active',p.id==='page-'+name));navButtons.forEach(b=>b.classList.toggle('active',b.dataset.page===name));sidebar.classList.remove('show');window.scrollTo({top:0,behavior:'smooth'});}
+navButtons.forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.go)));
+document.getElementById('menuBtn').addEventListener('click',()=>sidebar.classList.toggle('show'));
+document.getElementById('themeBtn').addEventListener('click',()=>{document.body.classList.toggle('dark');document.querySelector('.theme-label').textContent=document.body.classList.contains('dark')?'Modo claro':'Modo oscuro';});
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{let parent=b.closest('.page');parent.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));parent.querySelectorAll('.tabpanel').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab));}));
+document.querySelectorAll('.acc-btn').forEach(b=>b.addEventListener('click',()=>{let a=b.closest('.accordion');a.classList.toggle('open');b.querySelector('span').textContent=a.classList.contains('open')?'−':'＋';}));
+const toast=document.getElementById('toast');let toastTimer;
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',async()=>{let value=b.dataset.copy;if(!value){let pre=b.parentElement.querySelector('pre');value=pre?pre.innerText:'';}try{await navigator.clipboard.writeText(value);toast.textContent='Comandos copiados';}catch(e){toast.textContent='Selecciona y copia los comandos manualmente';}toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),1800);}));
+const checks=[...document.querySelectorAll('#checklist input')];function updateChecks(){let n=checks.filter(c=>c.checked).length;document.getElementById('checkProgress').style.width=(n/checks.length*100)+'%';document.getElementById('checkCount').textContent=n+' de '+checks.length+' completadas';}checks.forEach(c=>c.addEventListener('change',updateChecks));
+const questions=[
+ {q:'¿Qué función cumple un hipervisor?',o:['Editar documentos en la nube','Crear y administrar máquinas virtuales','Asignar nombres de dominio','Cifrar automáticamente todos los archivos'],a:1,e:'El hipervisor administra las máquinas virtuales y distribuye recursos del hardware.'},
+ {q:'¿Cuál es la función principal de vCenter Server?',o:['Administrar centralmente un entorno VMware','Crear imágenes Docker','Proporcionar Internet','Sustituir el sistema operativo invitado'],a:0,e:'vCenter centraliza la administración de hosts ESXi y máquinas virtuales.'},
+ {q:'¿Qué es una imagen Docker?',o:['Un disco físico','Una plantilla para crear contenedores','Una red VLAN','Un tipo de hipervisor'],a:1,e:'Una imagen contiene la aplicación y sus dependencias; a partir de ella se crean contenedores.'},
+ {q:'¿Qué significa IaaS?',o:['Internet como aplicación segura','Infraestructura como servicio','Integración automática de aplicaciones','Identidad administrada como servicio'],a:1,e:'IaaS ofrece recursos de infraestructura como cómputo, redes y almacenamiento.'},
+ {q:'¿Para qué se utiliza una red virtual en Azure?',o:['Para conectar y organizar recursos de red','Para reemplazar el sistema operativo','Para editar imágenes','Para crear usuarios locales de Windows'],a:0,e:'Una Virtual Network permite organizar la conectividad privada de recursos en Azure.'},
+ {q:'¿Cuál es una buena práctica de seguridad?',o:['Compartir cuentas administrativas','Abrir todos los puertos','Usar permisos mínimos y respaldos probados','Desactivar las actualizaciones'],a:2,e:'El principio de mínimo privilegio y las copias de seguridad verificadas reducen riesgos.'}
+];
+let qi=0,score=0,answered=false;
+function renderQuiz(){let q=questions[qi];document.getElementById('quizCounter').textContent=`Pregunta ${qi+1} de ${questions.length}`;document.getElementById('quizScore').textContent='Puntaje: '+score;document.getElementById('quizProgress').style.width=((qi+1)/questions.length*100)+'%';document.getElementById('quizQuestion').textContent=q.q;document.getElementById('quizFeedback').textContent='';document.getElementById('quizNext').disabled=true;answered=false;let box=document.getElementById('quizOptions');box.innerHTML='';q.o.forEach((o,i)=>{let b=document.createElement('button');b.className='option';b.textContent=o;b.addEventListener('click',()=>answer(i,b));box.appendChild(b);});}
+function answer(i,button){if(answered)return;answered=true;let q=questions[qi],opts=[...document.querySelectorAll('.option')];opts.forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add('correct');});if(i===q.a){score++;document.getElementById('quizFeedback').textContent='¡Correcto! '+q.e;}else{button.classList.add('wrong');document.getElementById('quizFeedback').textContent='Respuesta incorrecta. '+q.e;}document.getElementById('quizScore').textContent='Puntaje: '+score;document.getElementById('quizNext').disabled=false;document.getElementById('quizNext').textContent=qi===questions.length-1?'Ver resultado':'Siguiente →';}
+document.getElementById('quizNext').addEventListener('click',()=>{if(!answered)return;if(qi<questions.length-1){qi++;renderQuiz();}else{document.getElementById('quizQuestion').textContent=`Resultado final: ${score} de ${questions.length}`;document.getElementById('quizOptions').innerHTML='<p class="callout">Has terminado la autoevaluación. Puedes reiniciarla para volver a practicar.</p>';document.getElementById('quizFeedback').textContent=score>=5?'¡Muy bien! Dominas los conceptos principales.':'Repasa los módulos y vuelve a intentarlo.';document.getElementById('quizNext').disabled=true;document.getElementById('quizProgress').style.width='100%';}});
+document.getElementById('quizReset').addEventListener('click',()=>{qi=0;score=0;renderQuiz();document.getElementById('quizNext').textContent='Siguiente →';});
+document.getElementById('saveReflection').addEventListener('click',()=>{document.getElementById('reflectionMsg').textContent=document.getElementById('reflection').value.trim()?'Reflexión conservada en el campo mientras mantengas esta sesión.':'Escribe tu reflexión antes de guardarla.';});
+renderQuiz();
+</script>
+</body></html>
